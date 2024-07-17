@@ -10,9 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.Builder;
 
 @Entity
 @Table(name="micro_users")
+@Builder
 public class User {
 
 	@Id

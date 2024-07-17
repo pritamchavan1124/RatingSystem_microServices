@@ -63,6 +63,7 @@ public class UserServiceImpl implements IUserService{
 			//ResponseEntity<Hotel> forEntity=restTemplate.getForEntity("http://HOTEL-SERVICE/api/hotel/getHotel/"+rating.getHotelID(),Hotel.class);
 			//Hotel hotel=forEntity.getBody();
 			//above two lines are also working but i have tried feigin client also
+			System.out.println("*************************************************");
 			Hotel hotel=hotelService.getHotel(rating.getHotelID());
 			rating.setHotel(hotel);
 			return new Rating();

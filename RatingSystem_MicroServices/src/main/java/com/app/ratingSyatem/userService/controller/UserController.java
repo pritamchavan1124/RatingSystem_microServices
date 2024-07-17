@@ -19,6 +19,8 @@ import com.app.ratingSyatem.userService.entities.User;
 import com.app.ratingSyatem.userService.exception.ResourseNotFoundException;
 import com.app.ratingSyatem.userService.service.IUserService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -34,9 +36,21 @@ public class UserController {
 	}
 	
 	@GetMapping("/getUser/{user}")
+	@CircuitBreaker(name="ratingHotelBreaker",fallbackMethod = "ratingHotelFallBack")
 	public ResponseEntity<Optional<User>> getUserById(@PathVariable String user) throws ResourseNotFoundException{
 		Optional<User> us=userService.getUser(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(us);
+	}
+	
+	//creating fall back method for handling down services
+	public ResponseEntity<Optional<User>> ratingHotelFallBack(String user,Exception ex){
+		Optional<User> u=Optional.ofNullable(User.builder()
+				.email("dummy@gmail.com")
+				.firstName("fdummy")
+				.lastName("ldummy")
+				.userId("123")
+				.build());
+		return new ResponseEntity<Optional<User>>(u,HttpStatus.ACCEPTED);
 	}
 	
 	@DeleteMapping("/deleteUser/{userId}")
